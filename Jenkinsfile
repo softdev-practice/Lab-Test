@@ -1,7 +1,5 @@
-// CODE_CHANGES = getGitChanges()
-
 pipeline {
-    agent any
+    agent none
 
     tools {
         nodejs "NodeJS"
@@ -13,6 +11,7 @@ pipeline {
 
     stages {
         stage("clear containers and images if exist") {
+            agent { label 'master', label 'test' }
             steps {
                 script {
                     def runningContainers = sh(script: 'docker ps -q | wc -l', returnStdout: true).trim().toInteger()
@@ -27,6 +26,7 @@ pipeline {
         }
 
         stage("install packages") {
+            agent { label 'master', label 'test' }
             steps {
                 echo 'building the application...'
                 sh 'npm install'
@@ -34,6 +34,7 @@ pipeline {
         }
 
         stage("test") {
+            agent { label 'master' }
             steps {
                 echo 'testing the application...'
                 sh 'npm test'
@@ -41,6 +42,7 @@ pipeline {
         }
 
         stage("docker up"){
+            agent { label 'master', label 'test' }
             steps {
                 echo 'Docker build...'
                 sh 'pwd && ls -al'
@@ -51,6 +53,7 @@ pipeline {
         }
 
         stage("robot") {
+            agent { label 'master' }
             steps {
                 echo 'Check for ./robot/'
                 sh 'mkdir -p robot'
@@ -63,19 +66,19 @@ pipeline {
             }
         }
 
-        stage("Get API on VM2") {
-            agent { label 'test' }
-            steps {
-                sh 'curl 172.16.48.131:6000/is_prime/17'
-            }
-        }
+        // stage("Get API on VM2") {
+        //     agent { label 'test' }
+        //     steps {
+        //         sh 'curl 172.16.48.132:6000/is_prime/17'
+        //     }
+        // }
 
-        stage("docker stop and prune") {
-            agent { label 'test' }
-            steps {
-                echo 'Cleaning'
-                sh 'docker system prune -a -f'
-            }
-        }
+        // stage("docker stop and prune") {
+        //     agent { label 'test' }
+        //     steps {
+        //         echo 'Cleaning'
+        //         sh 'docker system prune -a -f'
+        //     }
+        // }
     }
 }
