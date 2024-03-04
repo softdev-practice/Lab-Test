@@ -10,8 +10,23 @@ pipeline {
     }
 
     stages {
-        stage("clear containers and images if exist") {
+        stage("VM1: clear containers and images if exist") {
             agent any
+            steps {
+                script {
+                    def runningContainers = sh(script: 'docker ps -q | wc -l', returnStdout: true).trim().toInteger()
+                    
+                    if (runningContainers > 0) {
+                        sh 'docker stop $(docker ps -a -q)'
+                    } else {
+                        echo "No action required. Running container count: $runningContainers"
+                    }
+                }
+            }
+        }
+
+        stage("VM2: clear containers and images if exist") {
+            agent { label 'test' }
             steps {
                 script {
                     def runningContainers = sh(script: 'docker ps -q | wc -l', returnStdout: true).trim().toInteger()
@@ -34,14 +49,14 @@ pipeline {
         }
 
         stage("test") {
-            agent { label 'master' }
+            agent any
             steps {
                 echo 'testing the application...'
                 sh 'npm test'
             }
         }
 
-        stage("docker up"){
+        stage("VM1: docker up"){
             agent any
             steps {
                 echo 'Docker build...'
@@ -52,8 +67,19 @@ pipeline {
             }
         }
 
+        stage("VM2: docker up"){
+            agent { label 'test' }
+            steps {
+                echo 'Docker build...'
+                sh 'pwd && ls -al'
+                sh 'docker build -t lab_test .'
+                sh 'docker run -d -p 6000:6000 lab_test'
+                sh 'docker ps'
+            }
+        }
+
         stage("robot") {
-            agent { label 'master' }
+            agent any
             steps {
                 echo 'Check for ./robot/'
                 sh 'mkdir -p robot'
