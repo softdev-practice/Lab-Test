@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 6000
 
-CMD [ "node", "is_prime.js" ]
+CMD [ "npm", "start" ]
