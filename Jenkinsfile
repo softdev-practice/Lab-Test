@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'master' || 'test' }
+    agent none
 
     tools {
         nodejs "NodeJS"
