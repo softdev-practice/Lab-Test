@@ -11,7 +11,7 @@ pipeline {
 
     stages {
         stage("VM1: clear containers and images if exist") {
-            agent any
+            agent { label 'master' }
             steps {
                 script {
                     def runningContainers = sh(script: 'docker ps -q | wc -l', returnStdout: true).trim().toInteger()
@@ -41,7 +41,7 @@ pipeline {
         }
 
         stage("install packages") {
-            agent any
+            agent { label 'master' }
             steps {
                 echo 'building the application...'
                 sh 'npm install'
@@ -49,7 +49,7 @@ pipeline {
         }
 
         stage("test") {
-            agent any
+            agent { label 'master' }
             steps {
                 echo 'testing the application...'
                 sh 'npm test'
@@ -57,7 +57,7 @@ pipeline {
         }
 
         stage("VM1: docker up"){
-            agent any
+            agent { label 'master' }
             steps {
                 echo 'Docker build...'
                 sh 'pwd && ls -al'
@@ -79,7 +79,7 @@ pipeline {
         }
 
         stage("robot") {
-            agent any
+            agent { label 'master' }
             steps {
                 echo 'Check for ./robot/'
                 sh 'mkdir -p robot'
