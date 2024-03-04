@@ -1,7 +1,7 @@
 // CODE_CHANGES = getGitChanges()
 
 pipeline {
-    agent none
+    agent any
 
     tools {
         nodejs "NodeJS"
