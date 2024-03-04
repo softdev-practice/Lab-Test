@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 6000
+const port = 3000
 
 function is_prime(num) {
     if (num <= 1) return false;

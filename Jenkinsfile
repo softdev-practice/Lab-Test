@@ -49,7 +49,7 @@ pipeline {
                 echo 'Docker build...'
                 sh 'pwd && ls -al'
                 sh 'docker build -t lab_test .'
-                sh 'docker run -d -p 6000:6000 lab_test'
+                sh 'docker run -d -p 3000:3000 lab_test'
                 sh 'docker ps'
             }
         }
@@ -102,7 +102,7 @@ pipeline {
                     sh "docker login registry.gitlab.com -u ${DEPLOY_USER} -p ${DEPLOY_TOKEN}"
                 }
                 sh "docker pull ${GITLAB_REGISTRY}"
-                sh "docker run -d -p 6000:6000 ${GITLAB_REGISTRY}"
+                sh "docker run -d -p 3000:3000 ${GITLAB_REGISTRY}"
                 echo 'Create Container Success!'
             }
         }
