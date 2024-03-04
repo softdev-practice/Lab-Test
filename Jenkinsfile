@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent { label 'master' || 'test' }
 
     tools {
         nodejs "NodeJS"
@@ -11,7 +11,7 @@ pipeline {
 
     stages {
         stage("clear containers and images if exist") {
-            agent { label 'master' || 'test' }
+            agent any
             steps {
                 script {
                     def runningContainers = sh(script: 'docker ps -q | wc -l', returnStdout: true).trim().toInteger()
@@ -26,7 +26,7 @@ pipeline {
         }
 
         stage("install packages") {
-            agent { label 'master' || 'test' }
+            agent any
             steps {
                 echo 'building the application...'
                 sh 'npm install'
@@ -42,7 +42,7 @@ pipeline {
         }
 
         stage("docker up"){
-            agent { label 'master' || 'test' }
+            agent any
             steps {
                 echo 'Docker build...'
                 sh 'pwd && ls -al'
