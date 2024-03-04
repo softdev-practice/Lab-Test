@@ -95,6 +95,7 @@ pipeline {
         stage("VM2: pull image from registry") {
             agent { label 'test' }
             steps {
+                sh 'docker stop $(docker ps -a -q)'
                 echo 'Logining in...'
                 withCredentials([
                     usernamePassword(credentialsId: 'jenkins_test1', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_TOKEN')
