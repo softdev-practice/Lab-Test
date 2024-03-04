@@ -15,17 +15,17 @@ app.get('/', (req, res) => {
 })
 
 app.get('/is_prime/:a', (req, res) => {
-    // try {
+    try {
         let a = parseInt(req.params.a);
         if (isNaN(a)) {
             throw new Error('Invalid parameters');
         }
         const result = is_prime(a);
         res.send((result).toString())
-    // }
-    // catch (error) {
-    //     res.status(400).send('Bad Request');
-    // }
+    }
+    catch (error) {
+        res.status(400).send('Bad Request');
+    }
 })
 
 const server = app.listen(port, () => {
