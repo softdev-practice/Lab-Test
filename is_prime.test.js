@@ -1,18 +1,18 @@
 // is_prime.test.js
-const { is_prime, server } = require('./is_prime');
+const { is_even, server } = require('./is_prime');
 
 afterAll(done => {
   server.close(done);
 });
 
-test('true_when_x_is_17', () => {
-  expect(is_prime(17)).toBe(true);
+test('test_x_is_1', () => {
+  expect(is_even(1)).toBe(false);
 });
 
-test('false_when_x_is_36', () => {
-  expect(is_prime(36)).toBe(false);
+test('test_x_is_0', () => {
+  expect(is_even(0)).toBe(true);
 });
 
-test('true_when_x_is_13219', () => {
-  expect(is_prime(13219)).toBe(true);
+test('test_x_is_neg2', () => {
+  expect(is_even(-2)).toBe(true);
 });
